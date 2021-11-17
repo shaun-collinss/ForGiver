@@ -1,8 +1,8 @@
 const request = require('superagent')
 const path = require('path')
 const express = require('express')
-const cors = require('cors')
-require('dotenv').config()
+//const cors = require('cors')
+//require('dotenv').config()
 
 const users = require('./routes/users')
 
@@ -12,17 +12,17 @@ module.exports = server
 
 server.use(express.json())
 server.use(express.static(path.join(__dirname, './public')))
-server.use(cors('*'))
+// server.use(cors('*'))
 server.use('/api/v1/users/', users)
 
-function collectionNumber (num) {
-  console.log(typeof num)
-  if (num === '1') {
-    return '1'
-  } else {
-    return num
-  }
-}
+// function collectionNumber (num) {
+//   console.log(typeof num)
+//   if (num === '1') {
+//     return '1'
+//   } else {
+//     return num
+//   }
+// }
 
 // server.get('/api/v1/cards', (req, res) => {
 //   const collection = collectionNumber(req.headers.collection)
