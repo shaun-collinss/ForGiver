@@ -1,8 +1,11 @@
 import { loadUser, getUsers, logOut } from '../api'
 
+// Admin Stuff
 export const SET_USERS = 'SET_USERS'
+export const FIND_USER = 'FIND_USER'
 
 
+// User Stuff
 export const SET_USER = 'SET_USER'
 export const CLEAR_USER = 'CLEAR_USER'
 
@@ -12,6 +15,14 @@ export function setUsers (users) {
     users
   }
 }
+
+export function findUser (id) {
+  return {
+    type:FIND_USER,
+    id
+  }
+}
+
 
 export function setUser (user) {
   return {

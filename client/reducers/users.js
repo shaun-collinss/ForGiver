@@ -1,4 +1,4 @@
-import {SET_USERS} from '../actions/users'
+import {SET_USERS, FIND_USER} from '../actions/users'
 
 const initialState = []
 
@@ -7,7 +7,7 @@ const users = (state = initialState, action) => {
     case SET_USERS:
       return action.users
     case FIND_USER:
-      return state.find((user) => user.id == action.id)
+      return state.find((users) => users.id == action.id)
     default:
       return state
   }

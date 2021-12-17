@@ -90,29 +90,40 @@
 /*!*********************************!*\
   !*** ./client/actions/users.js ***!
   \*********************************/
-/*! exports provided: SET_USERS, SET_USER, CLEAR_USER, setUsers, setUser, clearUser, fetchUsers, loginUser, logOutUser */
+/*! exports provided: SET_USERS, FIND_USER, SET_USER, CLEAR_USER, setUsers, findUser, setUser, clearUser, fetchUsers, loginUser, logOutUser */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_USERS", function() { return SET_USERS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FIND_USER", function() { return FIND_USER; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_USER", function() { return SET_USER; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CLEAR_USER", function() { return CLEAR_USER; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUsers", function() { return setUsers; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findUser", function() { return findUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUser", function() { return setUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearUser", function() { return clearUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchUsers", function() { return fetchUsers; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loginUser", function() { return loginUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logOutUser", function() { return logOutUser; });
 /* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api */ "./client/api/index.js");
+ // Admin Stuff
 
 var SET_USERS = 'SET_USERS';
+var FIND_USER = 'FIND_USER'; // User Stuff
+
 var SET_USER = 'SET_USER';
 var CLEAR_USER = 'CLEAR_USER';
 function setUsers(users) {
   return {
     type: SET_USERS,
     users: users
+  };
+}
+function findUser(id) {
+  return {
+    type: FIND_USER,
+    id: id
   };
 }
 function setUser(user) {
@@ -337,9 +348,9 @@ var users = function users() {
     case _actions_users__WEBPACK_IMPORTED_MODULE_0__["SET_USERS"]:
       return action.users;
 
-    case FIND_USER:
-      return state.find(function (user) {
-        return user.id == action.id;
+    case _actions_users__WEBPACK_IMPORTED_MODULE_0__["FIND_USER"]:
+      return state.find(function (users) {
+        return users.id == action.id;
       });
 
     default:
