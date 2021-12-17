@@ -1,6 +1,7 @@
 
 exports.up = function(knex) {
   return knex.schema.createTable('inventory', table => {
+    table.increments('id').primary()
     table.string('name')
     table.string('category')
     table.text('description')

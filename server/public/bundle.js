@@ -90,23 +90,42 @@
 /*!*********************************!*\
   !*** ./client/actions/users.js ***!
   \*********************************/
-/*! exports provided: SET_USERS, setUsers, fetchUsers */
+/*! exports provided: SET_USERS, SET_USER, CLEAR_USER, setUsers, setUser, clearUser, fetchUsers, loginUser, logOutUser */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_USERS", function() { return SET_USERS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_USER", function() { return SET_USER; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CLEAR_USER", function() { return CLEAR_USER; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUsers", function() { return setUsers; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUser", function() { return setUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearUser", function() { return clearUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchUsers", function() { return fetchUsers; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loginUser", function() { return loginUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logOutUser", function() { return logOutUser; });
 /* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api */ "./client/api/index.js");
 
-var SET_USERS = "SET_USERS";
-function setUsers(user) {
+var SET_USERS = 'SET_USERS';
+var SET_USER = 'SET_USER';
+var CLEAR_USER = 'CLEAR_USER';
+function setUsers(users) {
   return {
     type: SET_USERS,
+    users: users
+  };
+}
+function setUser(user) {
+  return {
+    type: SET_USER,
     user: user
   };
-} // Thunks here
+}
+function clearUser() {
+  return {
+    type: CLEAR_USER
+  };
+} // Thunks here, All user Thunks
 
 function fetchUsers() {
   return function (dispatch) {
@@ -117,6 +136,24 @@ function fetchUsers() {
       console.log(err.message);
     });
   };
+} // Single User Thunks
+
+function loginUser(user) {
+  return function (dispatch) {
+    return Object(_api__WEBPACK_IMPORTED_MODULE_0__["loadUser"])(user).then(function (user) {
+      dispatch(setUser(user));
+      return null;
+    })["catch"](function (err) {
+      console.log(err.message);
+    });
+  };
+}
+function logOutUser(user) {
+  return function (dispatch) {
+    return Object(_api__WEBPACK_IMPORTED_MODULE_0__["logOut"])(user.id).then(function () {
+      dispatch(clearUser());
+    });
+  };
 }
 
 /***/ }),
@@ -125,25 +162,38 @@ function fetchUsers() {
 /*!*****************************!*\
   !*** ./client/api/index.js ***!
   \*****************************/
-/*! exports provided: getUsers, loginUser */
+/*! exports provided: getUsers, getUser, loadUser, logOut */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUsers", function() { return getUsers; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loginUser", function() { return loginUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUser", function() { return getUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadUser", function() { return loadUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logOut", function() { return logOut; });
 /* harmony import */ var superagent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! superagent */ "./node_modules/superagent/lib/client.js");
 /* harmony import */ var superagent__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(superagent__WEBPACK_IMPORTED_MODULE_0__);
 
-var userUrl = '/api/v1/users/';
-var serverUrl = 'http://localhost:3000/api/v1';
+var userUrl = '/api/v1/users/'; // All Users Api Calls
+
 function getUsers() {
   return superagent__WEBPACK_IMPORTED_MODULE_0___default.a.get(userUrl).then(function (response) {
     return response.body;
   });
 }
-function loginUser(user) {
+function getUser(id) {
+  return superagent__WEBPACK_IMPORTED_MODULE_0___default.a.get("".concat(userUrl, "/").concat(id)).then(function (res) {
+    return res.body;
+  });
+} // Single User Calls
+
+function loadUser(user) {
   return superagent__WEBPACK_IMPORTED_MODULE_0___default.a.post(userUrl).send(user).then(function (res) {
+    return res.body;
+  });
+}
+function logOut(id) {
+  return superagent__WEBPACK_IMPORTED_MODULE_0___default.a.get("".concat(userUrl, "/").concat(id)).then(function (res) {
     return res.body;
   });
 }
@@ -237,19 +287,24 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-!(function webpackMissingModule() { var e = new Error("Cannot find module '../actions/user'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+/* harmony import */ var _actions_users__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../actions/users */ "./client/actions/users.js");
 
-var initialState = {};
+var initialState = {
+  id: 0,
+  userName: '',
+  email: '',
+  bio: ''
+};
 
 var user = function user() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
   switch (action.type) {
-    case !(function webpackMissingModule() { var e = new Error("Cannot find module '../actions/user'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()):
+    case _actions_users__WEBPACK_IMPORTED_MODULE_0__["SET_USER"]:
       return action.user;
 
-    case CLEAR_USER:
+    case _actions_users__WEBPACK_IMPORTED_MODULE_0__["CLEAR_USER"]:
       return initialState;
 
     default:

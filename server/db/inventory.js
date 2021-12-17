@@ -8,8 +8,6 @@ module.exports = {
   getItem,
 }
 
-
-//getting user functions here
 function getInventory (db = connection) {
   return db('inventory').select()
 }
@@ -19,7 +17,3 @@ function getItem (id, db = connection) {
 }
 
 
-//getting card collection here
-// function getCollection (db = connection) {
-
-// }
