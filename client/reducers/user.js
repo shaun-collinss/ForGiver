@@ -1,6 +1,11 @@
-import {SET_USER} from '../actions/user'
+import {SET_USER, CLEAR_USER} from '../actions/users'
 
-const initialState = {}
+const initialState = {
+  id: 0,
+  userName: '',
+  email: '',
+  bio: ''
+}
 
 const user = (state = initialState, action) => {
   switch(action.type){
