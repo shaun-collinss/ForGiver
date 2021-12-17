@@ -4,19 +4,20 @@ const connection = require('knex')(config)
 
 
 module.exports = {
-  getUsers,
-  getUser,
+  getInventory,
+  getItem,
 }
 
 
 //getting user functions here
-function getUsers (db = connection) {
-  return db('users').select()
+function getInventory (db = connection) {
+  return db('inventory').select()
 }
 
-function getUser (id, db = connection) {
-  return db('users').select().where('id', id).first()
+function getItem (id, db = connection) {
+  return db('inventory').select().where('id', id).first()
 }
+
 
 //getting card collection here
 // function getCollection (db = connection) {

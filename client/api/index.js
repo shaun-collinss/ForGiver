@@ -9,3 +9,9 @@ export function getUsers () {
     .then(response => response.body)
 }
 
+export function loginUser(user) {
+  return request
+    .post(userUrl)
+    .send(user)
+    .then(res => res.body)
+}

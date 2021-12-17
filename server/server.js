@@ -5,6 +5,7 @@ const express = require('express')
 //require('dotenv').config()
 
 const users = require('./routes/users')
+const inventory = require('./routes/inventory')
 
 const server = express()
 
@@ -12,8 +13,8 @@ module.exports = server
 
 server.use(express.json())
 server.use(express.static(path.join(__dirname, './public')))
-// server.use(cors('*'))
-server.use('/api/v1/users/', users)
+server.use('/api/v1/users', users)
+server.use('/api/v1/inventory', inventory)
 
 // function collectionNumber (num) {
 //   console.log(typeof num)
