@@ -1,9 +1,18 @@
 import React from 'react'
 
-export default function App () {
+import { Routes, Route } from 'react-router'
+import Home from './Home'
+import Nav from './Nav'
+
+function App () {
   return (
     <div className='app'>
-    <h1>The ForGiver</h1>
+    <Routes>
+      <Route path='/' element={<Home/>}/>
+      <Route path='Nav' element={<Nav/>}/>
+    </Routes>
   </div>
   )
 }
+
+export default App

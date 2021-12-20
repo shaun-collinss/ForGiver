@@ -1,6 +1,8 @@
 import request from 'superagent'
 
-const userUrl = '/api/v1/users/'
+const userUrl = '/api/v1/users'
+const inventoryUrl = '/api/v1/inventory'
+
 // All Users Api Calls
 export function getUsers () {
   return request
@@ -25,5 +27,13 @@ export function loadUser(user) {
 export function logOut(id) {
   return request
     .get(`${userUrl}/${id}`)
+    .then(res => res.body)
+}
+
+// Inventory Calls
+
+export function getInventory() {
+  return request
+    .get(inventoryUrl)
     .then(res => res.body)
 }
