@@ -6,6 +6,7 @@ const connection = require('knex')(config)
 module.exports = {
   getInventory,
   getItem,
+  addItem,
   updateItem,
   deleteItem
 }
@@ -18,7 +19,18 @@ function getItem (id, db = connection) {
   return db('inventory').select().where('id', id).first()
 }
 
-function updateItem(updateData, db = connection) {
+function addItem(item, db = connection) {
+  return db('inventory').insert(item)
+    .then(({id}) => {
+      getItem(id, db)
+      return null
+    })
+    .catch(err => {
+      console.log(err.message)
+    })
+}
+
+function updateItem(id, updateData, db = connection) {
   return db('inventory').select().where({id}).update(updateData)
 }
 

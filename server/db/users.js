@@ -6,6 +6,8 @@ const connection = require('knex')(config)
 module.exports = {
   getUsers,
   getUser,
+  updateUser,
+  deleteUser
 }
 
 
@@ -18,6 +20,17 @@ function getUser (id, db = connection) {
   return db('users').select().where('id', id).first()
 }
 
+function updateUser (id, updateData, db = connection) {
+  return db('users').select().where('id', id).update(updateData)
+    .then(id => {
+      getUser(id)
+      return null
+    })
+}
+
+function deleteUser (id, db = connection) {
+  return db('users').where('id', id).select().delete()
+}
 //getting card collection here
 // function getCollection (db = connection) {
 
