@@ -21,8 +21,8 @@ function getItem (id, db = connection) {
 
 function addItem(item, db = connection) {
   return db('inventory').insert(item)
-    .then(({id}) => {
-      getItem(id, db)
+    .then(([newId]) => {
+      getItem(newId, db)
       return null
     })
     .catch(err => {
@@ -31,9 +31,17 @@ function addItem(item, db = connection) {
 }
 
 function updateItem(id, updateData, db = connection) {
-  return db('inventory').select().where({id}).update(updateData)
+  const {name, category, description, image, amount, user_id} = updateData
+  return db('inventory').update({name, category, description, image, amount, user_id}).where({id})
+  .then(() => {
+    getItem(id, db)
+    return null
+  })
+  .catch(err => {
+    console.log(err.message)
+  })
 }
 
 function deleteItem(id, db = connection) {
-  return db('inventory').select().where('id', id).delete()
+  return db('inventory').where('id', id).delete()
 }

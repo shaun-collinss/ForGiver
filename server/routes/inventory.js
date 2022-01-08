@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-  const item = req.body.item
+  const item = req.body
   db.addItem(item)
     .then(item => {
       res.json(item)
@@ -38,11 +38,11 @@ router.get('/:id', (req, res) => {
   })
 })
 
-router.patch('/:id/update', (req, res) => {
+router.patch('/:id', (req, res) => {
+  const {name, category, description, image, amount, user_id} = req.body
   const id = req.params.id
-  const data = res.body.item
-  db.updateItem(id, data)
-  .then(item => {
+  db.updateItem(id, { name, category, description, image, amount, user_id })
+  .then((item) => {
     res.json(item)
     return null
   })
@@ -51,10 +51,11 @@ router.patch('/:id/update', (req, res) => {
   })
 })
 
-router.delete('/:id/delete', (req, res) => {
+router.delete('/:id', (req, res) => {
   const id = req.params.id
   db.deleteItem(id)
-    .then(() => {
+    .then((inventory) => {
+      res.json(inventory)
       return null
     })
     .catch(err => {
