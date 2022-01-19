@@ -7,7 +7,8 @@ module.exports = {
   getUsers,
   getUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  createUser
 }
 
 
@@ -18,6 +19,14 @@ function getUsers (db = connection) {
 
 function getUser (id, db = connection) {
   return db('users').select().where('id', id).first()
+}
+
+function createUser(data, db = connection) {
+  return db('users').insert(data)
+    .then(([id]) => {
+      getUser(id)
+      return null
+    })
 }
 
 function updateUser (id, updateData, db = connection) {

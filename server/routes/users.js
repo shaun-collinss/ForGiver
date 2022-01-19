@@ -14,6 +14,18 @@ router.get('/', (req, res) => {
     })
 })
 
+router.post('/', (req, res) => {
+  const user = req.body
+  db.createUser(user)
+    .then(user => {
+      res.json(user)
+      return null
+    })
+    .catch(err => {
+      res.status(500).send(err.message)
+    })
+})
+
 router.get('/:id', (req, res) => {
   const id = req.params.id
   db.getUser(id)
@@ -26,6 +38,30 @@ router.get('/:id', (req, res) => {
     })  
 })
 
+router.patch('/:id', (req, res) => {
+  const id = req.params.id
+  const {userName, email, bio} = req.body
+  db.updateUser(id, {userName, email, bio})
+    .then(user => {
+      res.json(user)
+      return null
+    })
+    .catch(err => {
+      res.status(500).send(err.message)
+    })
+})
+
+router.delete('/:id', (req, res) => {
+  const id = req.params.id
+  db.deleteUser(id)
+    .then(() => {
+      res.json()
+      return null
+    })
+    .catch(err => {
+      res.status(500).send(err.message)
+    })
+})
 
 
 module.exports = router
