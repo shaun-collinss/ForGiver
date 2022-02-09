@@ -10,6 +10,7 @@ function Nav () {
       <Link to='/'>Home</Link>
       <Link to='/User'>UserDetails</Link>
       <Link to='/About'>About</Link>
+      <Link to='/Login'>Login</Link>
     </>
   )
 }

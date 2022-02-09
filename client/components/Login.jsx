@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
+import { loginUser } from '../actions/users'
 
 function Login () {
   const user = useSelector(state => state.user)
@@ -21,7 +22,7 @@ function Login () {
 
   function handleSubmit (evt) {
     evt.preventDefault()
-    const action = loggingIn(form)
+    const action = loginUser(form)
     dispatch(action)
     navigate('/myPage')
   }

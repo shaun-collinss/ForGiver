@@ -5,6 +5,7 @@ import Home from './Home'
 import Nav from './Nav'
 import User from './User'
 import About from './About'
+import Login from './Login'
 
 function App () {
   return (
@@ -17,6 +18,7 @@ function App () {
       <Route path='Nav' element={<Nav/>}/>
       <Route path='User' element={<User/>}/>
       <Route path='About' element={<About/>}/>
+      <Route path='Login' element={<Login/>}/>
     </Routes>
   </div>
   )
