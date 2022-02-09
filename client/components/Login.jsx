@@ -24,7 +24,7 @@ function Login () {
     evt.preventDefault()
     const action = loginUser(form)
     dispatch(action)
-    navigate('/myPage')
+    navigate('/Home')
   }
 
 

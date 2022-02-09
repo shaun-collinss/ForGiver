@@ -1,10 +1,6 @@
 import React from 'react'
 
 import { useSelector } from 'react-redux'
-import Nav from './Nav'
-
-
-
 
 function Home () {
 const user = useSelector(state=>state.user)
