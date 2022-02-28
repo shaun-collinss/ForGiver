@@ -8,7 +8,9 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
-  createUser
+  createUser,
+  userExists,
+  getUserByName,
 }
 
 
@@ -40,7 +42,13 @@ function updateUser (id, updateData, db = connection) {
 function deleteUser (id, db = connection) {
   return db('users').where('id', id).select().delete()
 }
-//getting card collection here
-// function getCollection (db = connection) {
 
-// }
+function getUserByName (userName, db = connection ) {
+  return db('users').select().where({userName}).first()
+}
+
+function userExists (userName, db = connection ) {
+  return db('users').count('id as n').where({userName}).then(count => {
+    return count[0].n > 0
+  })
+}
