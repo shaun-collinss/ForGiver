@@ -17,9 +17,16 @@ export function getUser(id) {
 }
 
 // Single User Calls
-export function loadUser(user) {
+export function createUser(user) {
   return request
     .post(userUrl)
+    .send(user)
+    .then(res => res.body)
+}
+
+export function loggingIn(user) {
+  return request
+    .post(`${userURL}/login`)
     .send(user)
     .then(res => res.body)
 }
