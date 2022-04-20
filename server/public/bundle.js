@@ -444,7 +444,7 @@ function Login() {
       form = _useState2[0],
       setForm = _useState2[1];
 
-  function handleChange(evt) {
+  var handleChange = function handleChange(evt) {
     evt.preventDefault();
     var _evt$target = evt.target,
         name = _evt$target.name,
@@ -453,7 +453,7 @@ function Login() {
     var updated = _objectSpread(_objectSpread({}, form), {}, _defineProperty({}, name, value));
 
     setForm(updated);
-  }
+  };
 
   function handleSubmit(evt) {
     evt.preventDefault();
