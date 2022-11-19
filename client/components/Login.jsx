@@ -13,7 +13,7 @@ function Login () {
     password: ''
   })
 
-  function handleChange (evt) {
+  const handleChange = (evt) => {
     evt.preventDefault()
     const { name, value } = evt.target
     const updated = { ...form, [name]: value }
@@ -24,7 +24,7 @@ function Login () {
     evt.preventDefault()
     const action = loginUser(form)
     dispatch(action)
-    navigate('/myPage')
+    navigate('/Home')
   }
 
 

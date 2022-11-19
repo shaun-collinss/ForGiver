@@ -124,7 +124,7 @@ function fetchInventory() {
 /*!*********************************!*\
   !*** ./client/actions/users.js ***!
   \*********************************/
-/*! exports provided: SET_USERS, FIND_USER, SET_USER, CLEAR_USER, setUsers, findUser, setUser, clearUser, fetchUsers, loginUser, logOutUser */
+/*! exports provided: SET_USERS, FIND_USER, SET_USER, CLEAR_USER, setUsers, findUser, setUser, clearUser, fetchUsers, registerUser, loginUser, logOutUser */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -138,19 +138,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUser", function() { return setUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearUser", function() { return clearUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchUsers", function() { return fetchUsers; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "registerUser", function() { return registerUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loginUser", function() { return loginUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logOutUser", function() { return logOutUser; });
 /* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api */ "./client/api/index.js");
  // Admin Stuff
+// These here are the reducer function calls
 
 var SET_USERS = 'SET_USERS';
 var FIND_USER = 'FIND_USER'; // User Stuff
 
 var SET_USER = 'SET_USER';
-var CLEAR_USER = 'CLEAR_USER';
+var CLEAR_USER = 'CLEAR_USER'; // This function here is called after information is returned from the API in the Thunk function
+
 function setUsers(users) {
+  //The below is returning an reducer function and then giving it data to update the redux state.
   return {
+    // The below is the type of function that will be called inside the reducer
     type: SET_USERS,
+    // This here is the information thats passed to function inside the reducer. the switch statement has (action.type) so when SET_USERS is called it will return action.users as the call.
     users: users
   };
 }
@@ -171,6 +177,8 @@ function clearUser() {
     type: CLEAR_USER
   };
 } // Thunks here, All user Thunks
+// Thunks are called from with the React pages, ussually triggered by button press functions.
+// Thunks are a combination of functions, The first function called is the API call, the example for this is getUsers, it sends out an API call to get information from either your own server or the API you are using. The .then returns information and then dispatches that information through the dispatch call to Redux which sends the information through to the reducer and updates the current state in redux. 
 
 function fetchUsers() {
   return function (dispatch) {
@@ -183,10 +191,25 @@ function fetchUsers() {
   };
 } // Single User Thunks
 
+function registerUser(user) {
+  return function (dispatch) {
+    return Object(_api__WEBPACK_IMPORTED_MODULE_0__["createUser"])(user).then(function (user) {
+      return null;
+    })["catch"](function (err) {
+      console.log(err.message);
+    });
+  };
+}
 function loginUser(user) {
   return function (dispatch) {
-    return Object(_api__WEBPACK_IMPORTED_MODULE_0__["loadUser"])(user).then(function (user) {
-      dispatch(setUser(user));
+    return Object(_api__WEBPACK_IMPORTED_MODULE_0__["loggingIn"])(user).then(function (user) {
+      if (user.id === null) {
+        dispatch(clearUser(user));
+      } else {
+        dispatch(setUser(user));
+        localStorage.setItem('user', JSON.stringify(user));
+      }
+
       return null;
     })["catch"](function (err) {
       console.log(err.message);
@@ -196,7 +219,10 @@ function loginUser(user) {
 function logOutUser(user) {
   return function (dispatch) {
     return Object(_api__WEBPACK_IMPORTED_MODULE_0__["logOut"])(user.id).then(function () {
-      dispatch(clearUser());
+      dispatch(clearUser(user));
+      return null;
+    })["catch"](function (err) {
+      console.log(err.message);
     });
   };
 }
@@ -207,14 +233,15 @@ function logOutUser(user) {
 /*!*****************************!*\
   !*** ./client/api/index.js ***!
   \*****************************/
-/*! exports provided: getUsers, getUser, loadUser, logOut, getInventory */
+/*! exports provided: getUsers, getUser, createUser, loggingIn, logOut, getInventory */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUsers", function() { return getUsers; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUser", function() { return getUser; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadUser", function() { return loadUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createUser", function() { return createUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loggingIn", function() { return loggingIn; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logOut", function() { return logOut; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getInventory", function() { return getInventory; });
 /* harmony import */ var superagent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! superagent */ "./node_modules/superagent/lib/client.js");
@@ -234,8 +261,13 @@ function getUser(id) {
   });
 } // Single User Calls
 
-function loadUser(user) {
+function createUser(user) {
   return superagent__WEBPACK_IMPORTED_MODULE_0___default.a.post(userUrl).send(user).then(function (res) {
+    return res.body;
+  });
+}
+function loggingIn(user) {
+  return superagent__WEBPACK_IMPORTED_MODULE_0___default.a.post("".concat(userURL, "/login")).send(user).then(function (res) {
     return res.body;
   });
 }
@@ -342,8 +374,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var _Nav__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Nav */ "./client/components/Nav.jsx");
-
 
 
 
@@ -354,7 +384,17 @@ function Home() {
   var inventory = Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["useSelector"])(function (state) {
     return state.inventory;
   });
+<<<<<<< HEAD
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, user == 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Welcome ", user === null || user === void 0 ? void 0 : user.name) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Hi There login to start!"));
+=======
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
+    className: "Title"
+  }, "THE FORGIVERS")), user == 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Welcome ", user === null || user === void 0 ? void 0 : user.name) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Hi There login to start!"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+    className: "headliner"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+    className: "headliner"
+  }, "The game thats based on giving to others!")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null));
+>>>>>>> e52296aea1042848b386760426492205b9de77f9
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Home);
@@ -414,7 +454,11 @@ function Login() {
       form = _useState2[0],
       setForm = _useState2[1];
 
+<<<<<<< HEAD
   function handleChange(evt) {
+=======
+  var handleChange = function handleChange(evt) {
+>>>>>>> e52296aea1042848b386760426492205b9de77f9
     evt.preventDefault();
     var _evt$target = evt.target,
         name = _evt$target.name,
@@ -423,13 +467,21 @@ function Login() {
     var updated = _objectSpread(_objectSpread({}, form), {}, _defineProperty({}, name, value));
 
     setForm(updated);
+<<<<<<< HEAD
   }
+=======
+  };
+>>>>>>> e52296aea1042848b386760426492205b9de77f9
 
   function handleSubmit(evt) {
     evt.preventDefault();
     var action = Object(_actions_users__WEBPACK_IMPORTED_MODULE_3__["loginUser"])(form);
     dispatch(action);
+<<<<<<< HEAD
     navigate('/myPage');
+=======
+    navigate('/Home');
+>>>>>>> e52296aea1042848b386760426492205b9de77f9
   }
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
